@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Webcomponents Demo</title>
+    <script>
+        class HelloWorld extends HTMLElement {
+            connectedCallback() {
+                this.innerHTML = 'Hello World';
+            }
+        }
+        
+        window.customElements.define('hello-world', HelloWorld);
+    </script>
+<body>
+    <hello-world></hello-world>
+</body>
+
+</html>

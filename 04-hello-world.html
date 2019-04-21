@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Webcomponents Demo</title>
+    <script>
+        class HelloWorld extends HTMLElement {
+
+            constructor() {
+                super();
+
+                const template = document.createElement('template');
+                template.innerHTML = `
+                <style>
+                    :host {
+                        display: block;
+                        text-align: center;
+                    }
+                    span {
+                        display: inline-block;
+                        color: green;
+                        background-color: #333;
+                        padding: 5px;
+                        margin-left: 5px;
+                        margin-right: 5px;
+                    }
+                </style>
+                <span>Hello</span>
+                <span class="firstname"></span>
+                <span class="lastname"></span>
+                <span>You are</span>
+                <span class="age"></span>
+                <span>years old</span>
+                `;
+
+                const shadowRoot = this.attachShadow({mode: 'open'});
+                shadowRoot.appendChild(template.content.cloneNode(true));
+            }
+
+            static get observedAttributes() {
+                return ['firstname', 'lastname', 'birthyear'];
+            }
+        
+            render() {
+                const first = this.shadowRoot.querySelector('.firstname');
+                const last = this.shadowRoot.querySelector('.lastname');
+                const age = this.shadowRoot.querySelector('.age');
+
+                first.innerHTML = this.firstname;
+                last.innerHTML = this.lastname;
+                age.innerHTML = (new Date().getFullYear() - this.birthyear);
+            }
+
+            get firstname() {
+                return this.getAttribute('firstname') || 'John';
+            }
+
+            set firstname(value) {
+                return this.setAttribute('firstname', value);
+            }
+
+            get lastname() {
+                return this.getAttribute('lastname') || 'Doe';
+            }
+
+            set lastname(value) {
+                return this.setAttribute('lastname', value);
+            }
+
+            get birthyear() {
+                return this.getAttribute('birthyear') || '1970';
+            }
+
+            set birthyear(value) {
+                return this.setAttribute('birthyear', value);
+            }
+
+            sayMyName() {
+                alert(`Hello ${this.firstname} ${this.lastname}`);
+            }
+        
+            connectedCallback() {
+                this.render();
+            }
+        
+            attributeChangedCallback(attrName, oldVal, newVal) {
+                this.render();
+            }
+        }
+        
+        window.customElements.define('hello-world', HelloWorld);
+    </script>
+<body>
+    <hello-world firstname="Tobias" lastname="Balmer" birthyear="1993"></hello-world>
+    <span>Test</span>
+</body>
+
+</html>  

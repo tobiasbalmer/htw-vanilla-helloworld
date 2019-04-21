@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Webcomponents Demo</title>
+    <script>
+        class HelloWorld extends HTMLElement {
+
+            constructor() {
+                super();
+
+                const styleTag = document.createElement('style');
+                styleTag.innerHTML = `
+                    :host {
+                        display: block;
+                        text-align: center;
+                    }
+                    span {
+                        display: inline-block;
+                        color: green;
+                        background-color: #333;
+                        padding: 5px;
+                    }
+                `;
+
+                const spanTag = document.createElement('span');
+
+                const shadowRoot = this.attachShadow({mode: 'open'});
+
+                shadowRoot.appendChild(styleTag);
+                shadowRoot.appendChild(spanTag);
+            }
+
+            static get observedAttributes() {
+                return ['myname'];
+            }
+        
+            render() {
+                const content = `Hello ${this.myname}`;
+                const spanTag = this.shadowRoot.querySelector('span');
+                spanTag.innerHTML = content;
+            }
+        
+            get myname() {
+                return this.getAttribute('myname') || 'world';
+            }
+
+            set myname(value) {
+                return this.setAttribute('myname', value);
+            }
+
+            sayMyName() {
+                alert(`Hello ${this.myname}`);
+            }
+        
+            connectedCallback() {
+                this.render();
+            }
+        
+            attributeChangedCallback(attrName, oldVal, newVal) {
+                this.render();
+            }
+        }
+        
+        window.customElements.define('hello-world', HelloWorld);
+    </script>
+<body>
+    <hello-world myname="You"></hello-world>
+    <span>Test</span>
+</body>
+
+</html>  
